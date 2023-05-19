@@ -19,7 +19,6 @@ class LocalRedisConfig {
     @Bean
     fun redissonClient(): RedissonClient {
         val config = Config()
-//        println("-- ${"redis://${host}:${port}"} --")
         config.useSingleServer().address = "redis://${host}:${port}"
         return Redisson.create(config)
     }
