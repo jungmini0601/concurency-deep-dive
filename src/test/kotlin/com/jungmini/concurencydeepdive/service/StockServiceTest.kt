@@ -14,7 +14,8 @@ import java.util.concurrent.Executors
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL) // ?
 class StockServiceTest (
     val stockService: StockService,
-    val stockRepository: StockRepository
+    val stockRepository: StockRepository,
+    val namedLockFacade: NamedLockFacade
 ){
 
     @BeforeEach
@@ -24,7 +25,7 @@ class StockServiceTest (
     }
 
     @Test
-    fun `동시에 100 개의 요청이 들어간다! synchronzied `() {
+    fun `동시에 100 개의 요청이 들어간다! namedlock `() {
         val threadCount = 100
         val executorService = Executors.newFixedThreadPool(32)
 
@@ -34,7 +35,7 @@ class StockServiceTest (
         for(i in 1..threadCount) {
             executorService.submit{
                 try {
-                    stockService.decrease(1L, 1L)
+                    namedLockFacade.decrease(1L, 1L)
                 } finally {
                     latch.countDown()
                 }
