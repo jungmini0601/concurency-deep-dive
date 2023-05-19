@@ -15,7 +15,9 @@ import java.util.concurrent.Executors
 class StockServiceTest (
     val stockService: StockService,
     val stockRepository: StockRepository,
-    val namedLockFacade: NamedLockFacade
+    val namedLockFacade: NamedLockFacade,
+    val lettuceLockFacade: LettuceLockFacade,
+    val redissonLockFacade: RedissonLockFacade
 ){
 
     @BeforeEach
@@ -25,7 +27,7 @@ class StockServiceTest (
     }
 
     @Test
-    fun `동시에 100 개의 요청이 들어간다! 낙관적 락 `() {
+    fun `동시에 100 개의 요청이 들어간다! 레드락 `() {
         val threadCount = 100
         val executorService = Executors.newFixedThreadPool(32)
 
@@ -35,7 +37,7 @@ class StockServiceTest (
         for(i in 1..threadCount) {
             executorService.submit{
                 try {
-                    stockService.decrease(1L, 1L)
+                    redissonLockFacade.decrease(1L, 1L)
                 } finally {
                     latch.countDown()
                 }
