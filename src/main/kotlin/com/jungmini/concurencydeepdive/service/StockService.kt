@@ -12,9 +12,7 @@ class StockService (
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     fun decrease(id: Long, quantity: Long) {
-        val stock = stockRepository.findById(id).orElseThrow {
-            RuntimeException("Not Found Stock")
-        }
+        val stock = stockRepository.findByWithPessimisticLock(id)
         println("quantity: ${stock.quantity}")
         stock.decrease(quantity)
         stockRepository.saveAndFlush(stock)

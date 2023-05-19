@@ -25,7 +25,7 @@ class StockServiceTest (
     }
 
     @Test
-    fun `동시에 100 개의 요청이 들어간다! namedlock `() {
+    fun `동시에 100 개의 요청이 들어간다! 비관적 락 `() {
         val threadCount = 100
         val executorService = Executors.newFixedThreadPool(32)
 
@@ -35,7 +35,7 @@ class StockServiceTest (
         for(i in 1..threadCount) {
             executorService.submit{
                 try {
-                    namedLockFacade.decrease(1L, 1L)
+                    stockService.decrease(1L, 1L)
                 } finally {
                     latch.countDown()
                 }
