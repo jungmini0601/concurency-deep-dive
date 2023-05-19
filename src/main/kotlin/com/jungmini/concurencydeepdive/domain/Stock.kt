@@ -14,6 +14,7 @@ class Stock (
     val id: Long = 0L,
     val productId: Long,
     var quantity: Long,
+    @Version var version: Long
 ) {
     fun decrease(quantity: Long): Unit {
         if (this.quantity - quantity < 0) {

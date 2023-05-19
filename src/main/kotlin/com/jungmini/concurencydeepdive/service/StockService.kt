@@ -10,12 +10,17 @@ class StockService (
     val stockRepository: StockRepository,
 ) {
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional
     fun decrease(id: Long, quantity: Long) {
-        val stock = stockRepository.findByWithPessimisticLock(id)
-        println("quantity: ${stock.quantity}")
-        stock.decrease(quantity)
-        stockRepository.saveAndFlush(stock)
-        println("decreased quantity: ${stock.quantity}")
+        try {
+            val stock = stockRepository.findByWithOptimisticLock(id)
+            println("quantity: ${stock.quantity}")
+            stock.decrease(quantity)
+            stockRepository.saveAndFlush(stock)
+            println("decreased quantity: ${stock.quantity}")
+        } catch (e: Exception) {
+            // 충돌이 발생했을 때 로직 작성
+        }
+
     }
 }

@@ -20,12 +20,12 @@ class StockServiceTest (
 
     @BeforeEach
     fun `재고 데이터 생성` () {
-        val stock = Stock(productId = 1L, quantity = 100L)
+        val stock = Stock(productId = 1L, quantity = 100L, version = 0)
         stockRepository.save(stock)
     }
 
     @Test
-    fun `동시에 100 개의 요청이 들어간다! 비관적 락 `() {
+    fun `동시에 100 개의 요청이 들어간다! 낙관적 락 `() {
         val threadCount = 100
         val executorService = Executors.newFixedThreadPool(32)
 
