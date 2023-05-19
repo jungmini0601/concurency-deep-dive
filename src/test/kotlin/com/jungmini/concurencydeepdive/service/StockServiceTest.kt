@@ -24,14 +24,14 @@ class StockServiceTest (
     }
 
     @Test
-    fun `동시에 100 개의 요청이 들어간다! 동시성 처리 X`() {
+    fun `동시에 100 개의 요청이 들어간다! synchronzied `() {
         val threadCount = 100
         val executorService = Executors.newFixedThreadPool(32)
 
         // 다른 스레드에서 수행 완료될 때까지 대기할 수 있도록 하는 API
         val latch = CountDownLatch(threadCount)
 
-        for(i in 0..threadCount) {
+        for(i in 1..threadCount) {
             executorService.submit{
                 try {
                     stockService.decrease(1L, 1L)

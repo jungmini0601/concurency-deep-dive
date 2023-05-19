@@ -9,8 +9,8 @@ class StockService (
     val stockRepository: StockRepository
 ) {
 
-    @Transactional
-    fun decrease(id: Long, quantity: Long) {
+//    @Transactional
+    @Synchronized fun decrease(id: Long, quantity: Long) {
         val stock = stockRepository.findById(id).orElseThrow {
             RuntimeException("Not Found Stock")
         }
